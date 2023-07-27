@@ -1,12 +1,15 @@
 import { Route, BrowserRouter, Routes } from 'react-router-dom';
 import Home from '../pages/home/Home';
+import Layout from '../components/layout/Layout';
 
 export default function AppRoutes() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route element={<Home />} path="/" />
-      </Routes>
+      <Layout>
+        <Routes>
+          <Route element={<Home />} path="/" />
+        </Routes>
+      </Layout>
     </BrowserRouter>
   );
 }

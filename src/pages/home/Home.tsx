@@ -7,8 +7,8 @@ export default function Home() {
   }
 
   return (
-    <main>
-      <Button label="Add" icon="pi pi-plus" onClick={handleClick} />
-    </main>
+    <>
+      <Button label="Add Task" icon="pi pi-plus" onClick={handleClick} />
+    </>
   );
 }
