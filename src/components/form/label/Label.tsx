@@ -1,12 +1,10 @@
-export default function Label({
-  name,
-  label,
-  required,
-}: {
+interface ILabelProps {
   name?: string;
   label?: string;
   required: boolean;
-}) {
+}
+
+export default function Label({ name, label, required }: ILabelProps) {
   return (
     <label htmlFor={name} className="mb-1 ml-1">
       {label}&nbsp;

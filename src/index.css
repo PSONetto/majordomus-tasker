@@ -1,11 +1,11 @@
 :root {
   /* Pallet */
-  --main-color: rgb(122, 49, 111);
-  --lighter-main-color: rgb(205, 102, 136);
-  --darker-main-color: rgb(70, 25, 89);
-  --secondary-color: rgb(174, 216, 204);
+  --main-color: rgb(40, 40, 40);
+  --lighter-main-color: rgb(50, 50, 50);
+  --darker-main-color: rgb(30, 30, 30);
 
-  --text-color: rgb(41, 41, 41);
+  --layout-color: rgb(20, 20, 40);
+  --logo-bg-color: rgb(10, 10, 20);
 
   /* Layout sizing */
   --header-height: 80px;
@@ -35,22 +35,24 @@ body {
   background: rgb(70, 25, 89);
   background: linear-gradient(
     180deg,
-    rgba(70, 25, 89, 1) 0%,
-    rgba(122, 49, 111, 1) 20%,
-    rgba(205, 102, 136, 1) 80%,
-    rgba(174, 216, 204, 1) 100%
+    var(--darker-main-color) 40%,
+    var(--main-color) 60%,
+    var(--lighter-main-color) 90%
   );
 }
 
 header {
   height: var(--header-height);
-  background-color: var(--darker-main-color);
+  background-color: var(--layout-color);
+}
+
+header div {
+  background-color: var(--logo-bg-color);
 }
 
 footer {
   height: var(--footer-height);
-  background-color: var(--secondary-color);
-  color: rgb(77, 77, 77);
+  background-color: var(--layout-color);
 }
 
 main {
@@ -59,8 +61,12 @@ main {
 }
 
 a {
-  text-decoration: none;
   color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  color: lightblue;
 }
 
 @media (prefers-color-scheme: light) {

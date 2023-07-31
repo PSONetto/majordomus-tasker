@@ -2,8 +2,8 @@ import { Link } from 'react-router-dom';
 
 export default function Footer() {
   return (
-    <footer className="flex shadow-1 font-bold align-items-center">
-      <div className="flex flex-column col-3 p-0 pl-3">
+    <footer className="flex shadow-1 font-bold align-items-center justify-content-between">
+      <div className="flex flex-column p-0 pl-3">
         <Link
           to="https://github.com/PSONetto/majordomus-tasker"
           target="_blank"
@@ -16,7 +16,7 @@ export default function Footer() {
           Linkedin
         </Link>
       </div>
-      <div className="flex align-items-center justify-content-center col-9">
+      <div className="flex align-items-center justify-content-center pr-3">
         <Link to="https://github.com/PSONetto" target="_blank">
           <span className="ml-3">Developed by PSONetto</span>
         </Link>
