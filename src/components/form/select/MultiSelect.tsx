@@ -4,17 +4,19 @@ import { MultiSelect } from 'primereact/multiselect';
 import { classNames } from 'primereact/utils';
 
 import { IMultiSelectProps } from '../interfaces';
+import ErrorLabel from '../label/ErrorLabel';
 import Label from '../label/Label';
 
 export default function MTMultiSelect({
   control,
-  name,
+  name = '',
   cols = 12,
   label,
   options,
   value,
   filter,
   disabled,
+  rules,
   required = false,
   placeholder,
   loading,
@@ -23,8 +25,12 @@ export default function MTMultiSelect({
   return (
     <span className={`col-12 md:col-${cols} mt-2`}>
       <Controller
-        name={name ?? ''}
+        name={name}
         control={control}
+        rules={{
+          ...rules,
+          required: { message: 'This field is required', value: required },
+        }}
         render={({ field, fieldState }) => (
           <>
             <span className="p-float-label">
@@ -48,6 +54,7 @@ export default function MTMultiSelect({
               />
               <Label label={label} name={name} required={required} />
             </span>
+            {fieldState.error && <ErrorLabel fieldState={fieldState} />}
           </>
         )}
       />

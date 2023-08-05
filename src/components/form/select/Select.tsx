@@ -14,6 +14,7 @@ export default function MTSelect({
   value,
   filter,
   disabled,
+  rules,
   required = false,
   placeholder,
   loading,
@@ -23,6 +24,7 @@ export default function MTSelect({
     <Controller
       name={name ?? ''}
       control={control}
+      rules={{ ...rules, required }}
       render={({ field, fieldState }) => (
         <>
           <span className={`col-12 md:col-${cols}`}>

@@ -1,41 +1,62 @@
+import { useRef } from 'react';
 import { Controller } from 'react-hook-form';
 
 import { Calendar } from 'primereact/calendar';
 import { classNames } from 'primereact/utils';
 
 import { ICalendar } from '../interfaces';
+import ErrorLabel from '../label/ErrorLabel';
 import Label from '../label/Label';
 
 export default function MTCalendar({
   control,
-  name,
+  name = '',
   label,
   cols = 12,
+  rules,
   required = false,
   minDate,
   maxDate,
+  showTime,
+  showOnFocus = true,
+  onShow,
+  onHide,
 }: ICalendar) {
+  const windowSize = useRef([window.innerWidth, window.innerHeight]);
+
   return (
     <span className={`col-12 md:col-${cols} mt-2`}>
       <Controller
-        name={name ?? ''}
+        name={name}
         control={control}
-        rules={{ required }}
+        rules={{
+          ...rules,
+          required: { message: 'This field is required', value: required },
+        }}
         render={({ field, fieldState }) => (
-          <span className="p-float-label">
-            <Calendar
-              showOnFocus={false}
-              className={classNames('w-full', {
-                'p-invalid': fieldState.error,
-              })}
-              showIcon
-              onChange={(e) => field.onChange(e.value)}
-              value={field.value}
-              minDate={minDate}
-              maxDate={maxDate}
-            />
-            <Label required={required} label={label} name={name} />
-          </span>
+          <>
+            <span className="p-float-label">
+              <Calendar
+                showOnFocus={showOnFocus}
+                className={classNames('w-full', {
+                  'p-invalid': fieldState.error,
+                })}
+                showIcon
+                onChange={(e) => field.onChange(e.value)}
+                value={field.value}
+                minDate={minDate}
+                maxDate={maxDate}
+                showTime={showTime}
+                hourFormat={showTime ? '24' : undefined}
+                mask="__/__/____"
+                touchUI={windowSize.current[0] <= 576}
+                onShow={onShow}
+                onHide={onHide}
+              />
+              <Label required={required} label={label} name={name} />
+            </span>
+            {fieldState.error && <ErrorLabel fieldState={fieldState} />}
+          </>
         )}
       />
     </span>

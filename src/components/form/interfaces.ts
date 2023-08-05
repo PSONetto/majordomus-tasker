@@ -13,16 +13,16 @@ export interface IControlledComponent {
   control: Control<FieldValues, unknown>;
   cols?: number;
   label?: string;
+  rules?: Omit<
+    RegisterOptions<FieldValues, 'inputText'>,
+    'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'
+  >;
   required?: boolean;
   placeholder?: string;
   loading?: boolean;
 }
 
 export interface IInputTextProps extends IControlledComponent, InputTextProps {
-  rules?: Omit<
-    RegisterOptions<FieldValues, 'inputText'>,
-    'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'
-  >;
   mask?: string;
   keyfilter?: KeyFilterType;
 }
@@ -44,12 +44,10 @@ export interface IMultiSelectProps
   extends IControlledComponent,
     MultiSelectProps {
   options: SelectItemOptionsType;
-  value: unknown;
+  value: number[];
   filter?: boolean;
   disabled?: boolean;
-  setValue:
-    | React.Dispatch<SetStateAction<string>>
-    | React.Dispatch<SetStateAction<number | undefined>>;
+  setValue: React.Dispatch<SetStateAction<number[]>>;
 }
 
 export interface IRadioButtonProps

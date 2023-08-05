@@ -69,6 +69,10 @@ a:hover {
   color: lightblue;
 }
 
+.p-sortable-column-badge {
+  display: none;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
