@@ -49,4 +49,8 @@ This project is licensed under the [MIT License](LICENSE).
 
 - Thanks to the open-source community for providing valuable tools and libraries to make this project possible.
 
+## Contact
+
+Linkedin: [Plínio Netto](https://linkedin.com/in/plinio-netto)
+
 ---
