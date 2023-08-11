@@ -5,12 +5,13 @@ import axios from 'axios';
 import { isAfter } from 'date-fns';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
-import { DataTable } from 'primereact/datatable';
+import { DataTable, DataTableExpandedRows } from 'primereact/datatable';
 import { InputSwitch } from 'primereact/inputswitch';
 import { Toast } from 'primereact/toast';
 import { classNames } from 'primereact/utils';
 
 import CreateTask from '../../components/task/create/CreateTask';
+import EditTask from '../../components/task/edit/EditTask';
 import { api } from '../../lib/api';
 
 interface ISimpleItem {
@@ -23,7 +24,7 @@ export interface ITask {
   title: string;
   description?: string;
   due_date: string;
-  assignee: ISimpleItem[];
+  assignees: ISimpleItem[];
   priority: ISimpleItem;
   status: ISimpleItem;
   created_at: string;
@@ -57,14 +58,21 @@ export default function Home() {
   }
 
   const [hideDone, setHideDone] = useState(false);
+  const [taskID, setTaskID] = useState('');
 
   const [createTaskVisible, setCreateTaskVisible] = useState(false);
+  const [editTaskVisible, setEditTaskVisible] = useState(false);
+
+  const [expandedRows, setExpandedRows] = useState<
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    DataTableExpandedRows | any[]
+  >();
 
   function resolveDueDate(data: ITask) {
     return data.status.id !== 3 && isAfter(new Date(), new Date(data.due_date));
   }
 
-  function HeaderBody() {
+  function TableHeader() {
     const handleClick = (
       e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     ) => {
@@ -73,10 +81,12 @@ export default function Home() {
     };
 
     return (
-      <div className="flex align-items-center justify-content-between">
+      <div className="flex align-items-center justify-content-between mb-1">
         <h1 className="m-0 p-0">Tasks</h1>
         <div className="flex flex-column align-items-center">
-          <label htmlFor="hideDone">Hide Done</label>
+          <label htmlFor="hideDone" className="mr-2 hidden md:block">
+            Hide Done
+          </label>
           <InputSwitch
             id="hideDone"
             checked={hideDone}
@@ -104,9 +114,9 @@ export default function Home() {
     }
 
     return (
-      <h3 className={`font-bold m-0 p-0 text-${color}-400`}>
+      <span className={`font-bold m-0 p-0 text-${color}-400 ml-2`}>
         {rowData.status.name}
-      </h3>
+      </span>
     );
   }
 
@@ -154,14 +164,21 @@ export default function Home() {
     );
   }
 
-  function TaskDetailsButton() {
+  function TaskDetailsButton(rowData: ITask) {
     return (
-      <Button
-        type="button"
-        name="taskDetails"
-        severity="info"
-        icon="pi pi-list"
-      />
+      <span>
+        <Button
+          type="button"
+          name="taskDetails"
+          severity="info"
+          icon="pi pi-list"
+          onClick={(e) => {
+            e.preventDefault();
+            setTaskID(String(rowData.id));
+            setEditTaskVisible(true);
+          }}
+        />
+      </span>
     );
   }
 
@@ -177,17 +194,30 @@ export default function Home() {
   }
 
   return (
-    <>
+    <div className="col-12">
       <Toast ref={toast} />
 
-      <CreateTask
-        createTaskVisible={createTaskVisible}
-        setCreateTaskVisible={setCreateTaskVisible}
-        refetch={refetch}
-        toast={toast}
-      />
+      {createTaskVisible && (
+        <CreateTask
+          createTaskVisible={createTaskVisible}
+          setCreateTaskVisible={setCreateTaskVisible}
+          refetch={refetch}
+          toast={toast}
+        />
+      )}
+
+      {editTaskVisible && (
+        <EditTask
+          editTaskVisible={editTaskVisible}
+          setEditTaskVisible={setEditTaskVisible}
+          taskID={taskID}
+          refetch={refetch}
+          toast={toast}
+        />
+      )}
 
       <DataTable
+        name="tasksList"
         value={
           hideDone ? tasks?.filter((e: ITask) => e.status.id !== 2) : tasks
         }
@@ -195,12 +225,16 @@ export default function Home() {
         loading={isLoading}
         dataKey="id"
         size="small"
-        header={HeaderBody}
-        emptyMessage="No tasks yet, milord."
+        header={<TableHeader />}
+        emptyMessage="No tasks found."
         rowGroupMode="subheader"
         groupRowsBy="status.id"
         rowGroupHeaderTemplate={StatusRowGroupHeader}
         sortMode="multiple"
+        scrollHeight="60vh"
+        expandableRowGroups
+        expandedRows={expandedRows}
+        onRowToggle={(e) => setExpandedRows(e.data)}
         multiSortMeta={[
           { field: 'status', order: -1 },
           { field: 'due_date', order: 1 },
@@ -218,33 +252,35 @@ export default function Home() {
           header="Title"
           filterPlaceholder="Search by title"
           filter
+          className="col-5"
         />
         <Column
           header="Due Date"
           field="due_date"
           dataType="date"
           body={DueDateBody}
+          className="col-4"
         />
         <Column
           field="priority"
           header="Priority"
-          className="col-1"
           align="center"
           body={PriorityBody}
+          className="col-1"
         />
         <Column
           header="Details"
-          className="col-1"
           align="center"
           body={TaskDetailsButton}
+          className="col-1"
         />
         <Column
           header="Delete"
-          className="col-1"
           align="center"
           body={TaskDeleteButton}
+          className="col-1"
         />
       </DataTable>
-    </>
+    </div>
   );
 }

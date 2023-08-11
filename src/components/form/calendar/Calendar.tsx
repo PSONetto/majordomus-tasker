@@ -19,6 +19,8 @@ export default function MTCalendar({
   maxDate,
   showTime,
   showOnFocus = true,
+  defaultValue,
+  disabled,
   onShow,
   onHide,
 }: ICalendar) {
@@ -33,6 +35,7 @@ export default function MTCalendar({
           ...rules,
           required: { message: 'This field is required', value: required },
         }}
+        defaultValue={defaultValue}
         render={({ field, fieldState }) => (
           <>
             <span className="p-float-label">
@@ -48,8 +51,8 @@ export default function MTCalendar({
                 maxDate={maxDate}
                 showTime={showTime}
                 hourFormat={showTime ? '24' : undefined}
-                mask="__/__/____"
                 touchUI={windowSize.current[0] <= 576}
+                disabled={disabled}
                 onShow={onShow}
                 onHide={onHide}
               />

@@ -44,18 +44,17 @@ export interface IMultiSelectProps
   extends IControlledComponent,
     MultiSelectProps {
   options: SelectItemOptionsType;
-  value: number[];
   filter?: boolean;
   disabled?: boolean;
-  setValue: React.Dispatch<SetStateAction<number[]>>;
+  defaultValues?: number[];
 }
 
 export interface IRadioButtonProps
   extends IControlledComponent,
     RadioButtonProps {
   options: IOption[];
-  selectedOption: number;
-  setSelectedOption: React.Dispatch<SetStateAction<number>>;
 }
 
-export interface ICalendar extends IControlledComponent, CalendarProps {}
+export interface ICalendar extends IControlledComponent, CalendarProps {
+  defaultValue?: Date | string;
+}

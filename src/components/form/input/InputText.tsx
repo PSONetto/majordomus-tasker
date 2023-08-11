@@ -32,6 +32,7 @@ export default function MTInputText({
           ...rules,
           required: { message: 'This field is required', value: required },
         }}
+        defaultValue={defaultValue ?? ''}
         render={({ field, fieldState }) =>
           mask ? (
             <>
@@ -39,7 +40,7 @@ export default function MTInputText({
                 <InputMask
                   id={name}
                   name={name}
-                  value={field.value ?? defaultValue}
+                  value={field.value}
                   className={classNames('w-full', {
                     'p-invalid': fieldState.error,
                   })}
@@ -61,7 +62,7 @@ export default function MTInputText({
                 <InputText
                   id={name}
                   name={name}
-                  value={field.value ?? defaultValue}
+                  value={field.value}
                   className={classNames('w-full', {
                     'p-invalid': fieldState.error,
                   })}

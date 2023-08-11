@@ -5,6 +5,8 @@ import { Button } from 'primereact/button';
 import './error.css';
 
 export default function Fallback({ error, resetErrorBoundary }: FallbackProps) {
+  console.error(error);
+
   return (
     <div role="alert" className="flex flex-column col-12">
       <Button

@@ -13,14 +13,13 @@ export default function MTMultiSelect({
   cols = 12,
   label,
   options,
-  value,
   filter,
   disabled,
   rules,
   required = false,
   placeholder,
   loading,
-  setValue,
+  defaultValues,
 }: IMultiSelectProps) {
   return (
     <span className={`col-12 md:col-${cols} mt-2`}>
@@ -31,15 +30,13 @@ export default function MTMultiSelect({
           ...rules,
           required: { message: 'This field is required', value: required },
         }}
+        defaultValue={defaultValues}
         render={({ field, fieldState }) => (
           <>
             <span className="p-float-label">
               <MultiSelect
-                value={value}
-                onChange={(e) => {
-                  setValue(e.target.value);
-                  field.onChange(e.target.value);
-                }}
+                value={field.value}
+                onChange={(e) => field.onChange(e.target.value)}
                 options={options}
                 placeholder={placeholder}
                 className={classNames('w-full', {

@@ -8,6 +8,7 @@ import {
   useQuery,
 } from '@tanstack/react-query';
 import axios from 'axios';
+import { setSeconds } from 'date-fns';
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
 
@@ -48,22 +49,17 @@ export default function CreateTask({
     queryFn: ({ queryKey }) => getOptionsData(queryKey[0]),
   });
 
-  const [priority, setPriority] = useState(1);
-  const [assignee, setAssignee] = useState<number[]>([]);
   const [currentTime, setCurrentTime] = useState(new Date());
-
-  function onReset() {
-    reset();
-    setAssignee([]);
-    setPriority(1);
-  }
+  const [postLoading, setPostLoading] = useState(false);
 
   async function onConfirm(formData: FieldValues) {
+    setPostLoading(true);
+
     try {
       const taskParams = {
         title: formData.title,
         description: formData.description,
-        due_date: formData.due_date.toISOString(),
+        due_date: setSeconds(formData.due_date, 0).toISOString(),
         priority_id: formData.priority_id,
         status_id: 1,
         assignee: formData.assignee,
@@ -78,7 +74,7 @@ export default function CreateTask({
         life: 6000,
       });
 
-      onReset();
+      reset();
       refetch();
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -86,6 +82,8 @@ export default function CreateTask({
       } else {
         console.error(error);
       }
+    } finally {
+      setPostLoading(false);
     }
   }
 
@@ -99,6 +97,7 @@ export default function CreateTask({
           type="reset"
           label="Reset"
           icon="pi pi-times"
+          loading={postLoading}
         />
         <Button
           name="confirm"
@@ -106,6 +105,7 @@ export default function CreateTask({
           type="submit"
           label="Confirm"
           icon="pi pi-check"
+          loading={postLoading}
         />
       </div>
     );
@@ -119,8 +119,8 @@ export default function CreateTask({
       iconLabel="pi-plus"
       footer={formFooter}
       form="createForm"
-      onSubmit={handleSubmit(onConfirm)}
-      onReset={onReset}
+      onSubmit={postLoading ? () => {} : handleSubmit(onConfirm)}
+      onReset={() => reset()}
     >
       <MTInputText
         control={control}
@@ -136,8 +136,6 @@ export default function CreateTask({
         name="assignee"
         filter
         options={assignees}
-        setValue={setAssignee}
-        value={assignee}
         required
         placeholder="Select one or more assignees"
         loading={isLoadingAssignees}
@@ -166,8 +164,7 @@ export default function CreateTask({
           name="priority_id"
           label="Priority"
           options={priorities}
-          selectedOption={priority}
-          setSelectedOption={setPriority}
+          defaultValue={0}
           required
         />
       )}
