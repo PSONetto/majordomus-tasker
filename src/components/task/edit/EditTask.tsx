@@ -7,13 +7,13 @@ import {
   RefetchQueryFilters,
   useQuery,
 } from '@tanstack/react-query';
-import axios from 'axios';
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
 
 import { api } from '../../../lib/api';
 import { ITask } from '../../../pages/home/Home';
 import getOptionsData from '../../../utils/functions/getOptionsData';
+import handleAPIError from '../../../utils/functions/handleAPIError';
 import MTCalendar from '../../form/calendar/Calendar';
 import FormDialog from '../../form/dialog/FormDialog';
 import MTInputText from '../../form/input/InputText';
@@ -67,11 +67,7 @@ export default function EditTask({
 
       return data as ITask;
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error(error.response?.data);
-      } else {
-        console.error(error);
-      }
+      handleAPIError(error, toast);
     }
   }
 
@@ -98,11 +94,7 @@ export default function EditTask({
       refetch();
       setEditing(false);
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error(error.response?.data);
-      } else {
-        console.error(error);
-      }
+      handleAPIError(error, toast);
     }
   }
 

@@ -1,10 +1,10 @@
 import { useState, useRef } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
 import { isAfter } from 'date-fns';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { DataTable, DataTableExpandedRows } from 'primereact/datatable';
 import { InputSwitch } from 'primereact/inputswitch';
 import { Toast } from 'primereact/toast';
@@ -13,6 +13,7 @@ import { classNames } from 'primereact/utils';
 import CreateTask from '../../components/task/create/CreateTask';
 import EditTask from '../../components/task/edit/EditTask';
 import { api } from '../../lib/api';
+import handleAPIError from '../../utils/functions/handleAPIError';
 
 interface ISimpleItem {
   id: number;
@@ -37,6 +38,7 @@ export default function Home() {
   const {
     data: tasks,
     isLoading,
+    isFetching,
     refetch,
   } = useQuery({
     queryKey: ['tasks'],
@@ -49,11 +51,7 @@ export default function Home() {
 
       return data as ITask[];
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error(error.response?.data);
-      } else {
-        console.error(error);
-      }
+      handleAPIError(error, toast);
     }
   }
 
@@ -182,13 +180,33 @@ export default function Home() {
     );
   }
 
-  function TaskDeleteButton() {
+  const confirmDelete = (rowData: ITask) => {
+    confirmDialog({
+      header: `Delete Task "${rowData.title}"`,
+      message: 'Are you sure you want to delete this task?',
+      icon: 'pi pi-exclamation-triangle text-red-600',
+      acceptClassName: 'p-button-danger',
+      acceptIcon: 'pi pi-trash',
+      rejectIcon: 'pi pi-times',
+      accept: async () => {
+        try {
+          await api.delete('tasks/' + rowData.id);
+          refetch();
+        } catch (error) {
+          handleAPIError(error, toast);
+        }
+      },
+    });
+  };
+
+  function TaskDeleteButton(rowData: ITask) {
     return (
       <Button
         type="button"
         name="taskDelete"
         severity="danger"
         icon="pi pi-trash"
+        onClick={() => confirmDelete(rowData)}
       />
     );
   }
@@ -216,13 +234,15 @@ export default function Home() {
         />
       )}
 
+      <ConfirmDialog />
+
       <DataTable
         name="tasksList"
         value={
           hideDone ? tasks?.filter((e: ITask) => e.status.id !== 2) : tasks
         }
         showGridlines
-        loading={isLoading}
+        loading={isLoading || isFetching}
         dataKey="id"
         size="small"
         header={<TableHeader />}
