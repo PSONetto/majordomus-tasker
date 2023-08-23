@@ -45,6 +45,11 @@ export default function EditTask({
     queryFn: ({ queryKey }) => getOptionsData(queryKey[0]),
   });
 
+  const { data: statuses, isLoading: isLoadingStatuses } = useQuery({
+    queryKey: ['statuses'],
+    queryFn: ({ queryKey }) => getOptionsData(queryKey[0]),
+  });
+
   const { data: assignees, isLoading: isLoadingAssignees } = useQuery({
     queryKey: ['assignees'],
     queryFn: ({ queryKey }) => getOptionsData(queryKey[0]),
@@ -139,8 +144,8 @@ export default function EditTask({
     <FormDialog
       visible={editTaskVisible}
       setVisible={setEditTaskVisible}
-      label="Create New Task"
-      iconLabel="pi-plus"
+      label="Task Details"
+      iconLabel="pi-list"
       footer={formFooter}
       form="editForm"
       onSubmit={handleSubmit(onConfirm)}
@@ -198,6 +203,21 @@ export default function EditTask({
               defaultValue={task.priority.id}
               required
               disabled={!editing}
+              cols={6}
+            />
+          )}
+          {isLoadingStatuses ? (
+            <Loading />
+          ) : (
+            <MTRadioButton
+              control={control}
+              name="status_id"
+              label="Status"
+              options={statuses}
+              defaultValue={task.status.id}
+              required
+              disabled={!editing}
+              cols={6}
             />
           )}
         </>

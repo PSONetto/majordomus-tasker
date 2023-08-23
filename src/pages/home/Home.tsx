@@ -61,6 +61,8 @@ export default function Home() {
   const [createTaskVisible, setCreateTaskVisible] = useState(false);
   const [editTaskVisible, setEditTaskVisible] = useState(false);
 
+  const [loadingDoneUpdate, setLoadingDoneUpdate] = useState(false);
+
   const [expandedRows, setExpandedRows] = useState<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     DataTableExpandedRows | any[]
@@ -175,8 +177,51 @@ export default function Home() {
             setTaskID(String(rowData.id));
             setEditTaskVisible(true);
           }}
+          loading={loadingDoneUpdate}
         />
       </span>
+    );
+  }
+
+  async function updateStatus(rowData: ITask) {
+    const currentStatus = rowData.status.id;
+
+    if (currentStatus != 3) {
+      setLoadingDoneUpdate(true);
+
+      try {
+        const params = {
+          status_id: rowData.status.id === 2 ? 3 : 2,
+        };
+
+        await api.put(`tasks/${rowData.id}`, params);
+
+        refetch();
+      } catch (error) {
+        handleAPIError(error, toast);
+      } finally {
+        setLoadingDoneUpdate(false);
+      }
+    }
+  }
+
+  function StatusBody(rowData: ITask) {
+    const statusID = rowData.status.id;
+
+    const label = statusID === 1 ? 'Doing' : 'Done';
+
+    return statusID === 3 ? (
+      <span className="pi pi-check" />
+    ) : (
+      <Button
+        name="statusUpdate"
+        type="button"
+        label={label}
+        onClick={(e) => {
+          e.preventDefault();
+          updateStatus(rowData);
+        }}
+      />
     );
   }
 
@@ -207,6 +252,7 @@ export default function Home() {
         severity="danger"
         icon="pi pi-trash"
         onClick={() => confirmDelete(rowData)}
+        loading={loadingDoneUpdate}
       />
     );
   }
@@ -239,7 +285,7 @@ export default function Home() {
       <DataTable
         name="tasksList"
         value={
-          hideDone ? tasks?.filter((e: ITask) => e.status.id !== 2) : tasks
+          hideDone ? tasks?.filter((e: ITask) => e.status.id !== 3) : tasks
         }
         showGridlines
         loading={isLoading || isFetching}
@@ -256,9 +302,9 @@ export default function Home() {
         expandedRows={expandedRows}
         onRowToggle={(e) => setExpandedRows(e.data)}
         multiSortMeta={[
-          { field: 'status', order: -1 },
+          { field: 'status.id', order: -1 },
+          { field: 'priority.id', order: -1 },
           { field: 'due_date', order: 1 },
-          { field: 'priority', order: 1 },
         ]}
         rowClassName={(rowData) =>
           classNames({
@@ -268,11 +314,17 @@ export default function Home() {
         }
       >
         <Column
+          header="Status"
+          body={StatusBody}
+          className="col-1"
+          align="center"
+        />
+        <Column
           field="title"
           header="Title"
           filterPlaceholder="Search by title"
           filter
-          className="col-5"
+          className="col-4"
         />
         <Column
           header="Due Date"

@@ -160,7 +160,7 @@ export default function CreateTask({
           name="priority_id"
           label="Priority"
           options={priorities}
-          defaultValue={0}
+          defaultValue={1}
           required
         />
       )}
