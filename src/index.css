@@ -38,7 +38,7 @@ header {
   background-color: var(--layout-color);
 }
 
-header div {
+#logo {
   background-color: var(--logo-bg-color);
 }
 

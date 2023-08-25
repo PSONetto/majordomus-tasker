@@ -21,7 +21,7 @@ import MTRadioButton from '../../form/radio/RadioButton';
 import MTMultiSelect from '../../form/select/MultiSelect';
 import Loading from '../../loading/Loading';
 
-interface ICreateTaskProps {
+interface IEditTaskProps {
   toast: RefObject<Toast>;
   editTaskVisible: boolean;
   taskID: string;
@@ -37,7 +37,7 @@ export default function EditTask({
   taskID,
   setEditTaskVisible,
   refetch,
-}: ICreateTaskProps) {
+}: IEditTaskProps) {
   const { control, handleSubmit, reset } = useForm();
 
   const { data: priorities, isLoading: isLoadingPriorities } = useQuery({
