@@ -10,8 +10,8 @@ import {
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
 
-import { api } from '../../../lib/api';
-import { ITask } from '../../../pages/home/Home';
+import { api } from '../../../api/api';
+import { ITask } from '../../../pages/tasks/Tasks';
 import getOptionsData from '../../../utils/functions/getOptionsData';
 import handleAPIError from '../../../utils/functions/handleAPIError';
 import MTCalendar from '../../form/calendar/Calendar';

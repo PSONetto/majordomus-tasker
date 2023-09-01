@@ -1,4 +1,4 @@
-import { api } from '../../lib/api';
+import { api } from '../../api/api';
 
 interface IOptionsData {
   name: string;

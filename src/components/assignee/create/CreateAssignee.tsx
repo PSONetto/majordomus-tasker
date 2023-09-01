@@ -9,7 +9,8 @@ import {
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
 
-import { api } from '../../../lib/api';
+import { api } from '../../../api/api';
+import { useAuth } from '../../../contexts/auth/AuthContext';
 import { IAssignee } from '../../../pages/collaborators/Collaborators';
 import handleAPIError from '../../../utils/functions/handleAPIError';
 import FormDialog from '../../form/dialog/FormDialog';
@@ -32,14 +33,18 @@ export default function CreateAssignee({
 }: ICreateAssigneeProps) {
   const { control, handleSubmit, reset } = useForm();
 
+  const { user } = useAuth();
+
   const [postLoading, setPostLoading] = useState(false);
 
   async function onConfirm(formData: FieldValues) {
     setPostLoading(true);
 
     try {
+      console.log(user);
       const assigneeParams = {
         name: formData.name,
+        user_id: user?.id,
       };
 
       const { data } = await api.post('assignees', assigneeParams);

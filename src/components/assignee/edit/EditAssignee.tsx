@@ -10,7 +10,7 @@ import {
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
 
-import { api } from '../../../lib/api';
+import { api } from '../../../api/api';
 import { IAssignee } from '../../../pages/collaborators/Collaborators';
 import handleAPIError from '../../../utils/functions/handleAPIError';
 import FormDialog from '../../form/dialog/FormDialog';

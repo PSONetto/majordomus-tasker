@@ -11,8 +11,9 @@ import { setSeconds } from 'date-fns';
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
 
-import { api } from '../../../lib/api';
-import { ITask } from '../../../pages/home/Home';
+import { api } from '../../../api/api';
+import { useAuth } from '../../../contexts/auth/AuthContext';
+import { ITask } from '../../../pages/tasks/Tasks';
 import getOptionsData from '../../../utils/functions/getOptionsData';
 import handleAPIError from '../../../utils/functions/handleAPIError';
 import MTCalendar from '../../form/calendar/Calendar';
@@ -39,6 +40,8 @@ export default function CreateTask({
 }: ICreateTaskProps) {
   const { control, handleSubmit, reset } = useForm();
 
+  const { user } = useAuth();
+
   const { data: priorities, isLoading: isLoadingPriorities } = useQuery({
     queryKey: ['priorities'],
     queryFn: ({ queryKey }) => getOptionsData(queryKey[0]),
@@ -63,6 +66,7 @@ export default function CreateTask({
         priority_id: formData.priority_id,
         status_id: 1,
         assignee: formData.assignee,
+        user_id: user?.id,
       };
 
       const { data } = await api.post('tasks', taskParams);

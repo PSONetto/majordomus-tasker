@@ -7,9 +7,10 @@ import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { DataTable } from 'primereact/datatable';
 import { Toast } from 'primereact/toast';
 
+import { api } from '../../api/api';
 import CreateAssignee from '../../components/assignee/create/CreateAssignee';
 import EditAssignee from '../../components/assignee/edit/EditAssignee';
-import { api } from '../../lib/api';
+import { useAuth } from '../../contexts/auth/AuthContext';
 import handleAPIError from '../../utils/functions/handleAPIError';
 
 export interface IAssignee {
@@ -19,6 +20,8 @@ export interface IAssignee {
 
 export default function Collaborators() {
   const toast = useRef<Toast>(null);
+
+  const { user } = useAuth();
 
   const {
     data: assignees,
@@ -37,7 +40,9 @@ export default function Collaborators() {
 
   async function getAssignees() {
     try {
-      const { data } = await api.get('assignees');
+      const { data } = await api.get('assignees', {
+        params: { user_id: user?.id },
+      });
 
       return data as IAssignee[];
     } catch (error) {
