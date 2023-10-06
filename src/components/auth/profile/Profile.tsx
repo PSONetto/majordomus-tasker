@@ -50,6 +50,9 @@ export default function Profile({ visible, setVisible }: IProfileProps) {
               e.preventDefault();
               setEditing(true);
             }}
+            disabled
+            tooltip="Not yet implemented"
+            tooltipOptions={{ showOnDisabled: true, position: 'bottom' }}
           />
         )}
       </div>
@@ -60,8 +63,8 @@ export default function Profile({ visible, setVisible }: IProfileProps) {
     <FormDialog
       visible={visible}
       setVisible={setVisible}
-      label="Task Details"
-      iconLabel="pi-list"
+      label="Profile"
+      iconLabel="pi-user"
       footer={formFooter}
       form="profileForm"
       onSubmit={() => {}}
