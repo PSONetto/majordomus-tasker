@@ -128,6 +128,7 @@ export default function SignUp({ visible, setVisible }: ISignUpProps) {
           name="cpassword"
           label="Confirm Password"
           rules={passwordRules}
+          required
           help={help}
         />
       </FormDialog>
