@@ -6,6 +6,7 @@ import { DropdownProps } from 'primereact/dropdown';
 import { InputTextProps } from 'primereact/inputtext';
 import { KeyFilterType } from 'primereact/keyfilter';
 import { MultiSelectProps } from 'primereact/multiselect';
+import { PasswordProps } from 'primereact/password';
 import { RadioButtonProps } from 'primereact/radiobutton';
 import { SelectItemOptionsType } from 'primereact/selectitem';
 
@@ -57,4 +58,8 @@ export interface IRadioButtonProps
 
 export interface ICalendar extends IControlledComponent, CalendarProps {
   defaultValue?: Date | string;
+}
+
+export interface IPassword extends IControlledComponent, PasswordProps {
+  help?: string | JSX.Element;
 }

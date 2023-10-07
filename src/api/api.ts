@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const api = axios.create({
-  baseURL: 'http://localhost:8000/api',
+  baseURL: import.meta.env.VITE_REACT_APP_API_URL,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
@@ -10,7 +10,7 @@ export const api = axios.create({
 });
 
 export const apiSanctum = axios.create({
-  baseURL: 'http://localhost:8000/sanctum',
+  baseURL: import.meta.env.VITE_REACT_APP_SANCTUM_URL,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',

@@ -3,7 +3,7 @@ import { Controller } from 'react-hook-form';
 import { Password } from 'primereact/password';
 import { classNames } from 'primereact/utils';
 
-import { IInputTextProps } from '../interfaces';
+import { IPassword } from '../interfaces';
 import ErrorLabel from '../label/ErrorLabel';
 import Label from '../label/Label';
 
@@ -19,8 +19,13 @@ export default function MTPassword({
   required = false,
   disabled,
   autoFocus = false,
+  help,
   onBlur,
-}: IInputTextProps) {
+}: IPassword) {
+  const footer = () => {
+    return <i>{help}</i>;
+  };
+
   return (
     <span className={`col-12 md:col-${cols} mt-2`}>
       <Controller
@@ -49,6 +54,7 @@ export default function MTPassword({
                 autoFocus={autoFocus}
                 toggleMask
                 inputClassName="w-full"
+                footer={footer}
               />
               <Label label={label} name={name} required={required} />
             </span>

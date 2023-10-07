@@ -1,4 +1,4 @@
-import { useRef, SetStateAction } from 'react';
+import { useRef, SetStateAction, useState } from 'react';
 import { FieldValues, RegisterOptions, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -26,8 +26,12 @@ export default function SignUp({ visible, setVisible }: ISignUpProps) {
 
   const { control, handleSubmit, getValues } = useForm();
 
+  const [loading, setLoading] = useState(false);
+
   async function onSubmit(formData: FieldValues) {
     if (getValues('password') === getValues('cpassword')) {
+      setLoading(true);
+
       try {
         const params = {
           name: formData.name,
@@ -40,9 +44,12 @@ export default function SignUp({ visible, setVisible }: ISignUpProps) {
         if (resp.status === 200) {
           setUser(resp.data.user);
           navigate('tasks');
+          setVisible(false);
         }
       } catch (error) {
         handleAPIError(error, toast);
+      } finally {
+        setLoading(false);
       }
     } else {
       toast.current?.show({
@@ -78,10 +85,19 @@ export default function SignUp({ visible, setVisible }: ISignUpProps) {
           label="Confirm"
           icon="pi pi-check"
           form="signupForm"
+          loading={loading}
         />
       </div>
     );
   }
+
+  const help = (
+    <ul>
+      <li>At least one lower case.</li>
+      <li>At least one upper case.</li>
+      <li>Minimum of 8 characters.</li>
+    </ul>
+  );
 
   return (
     <>
@@ -105,13 +121,14 @@ export default function SignUp({ visible, setVisible }: ISignUpProps) {
           label="Password"
           rules={passwordRules}
           required
+          help={help}
         />
         <MTPassword
           control={control}
           name="cpassword"
           label="Confirm Password"
           rules={passwordRules}
-          required
+          help={help}
         />
       </FormDialog>
     </>

@@ -49,7 +49,7 @@ export default function CreateTask({
 
   const { data: assignees, isLoading: isLoadingAssignees } = useQuery({
     queryKey: ['assignees'],
-    queryFn: ({ queryKey }) => getOptionsData(queryKey[0]),
+    queryFn: ({ queryKey }) => user && getOptionsData(queryKey[0], user),
   });
 
   const [currentTime, setCurrentTime] = useState(new Date());

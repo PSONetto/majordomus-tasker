@@ -41,7 +41,6 @@ export default function CreateAssignee({
     setPostLoading(true);
 
     try {
-      console.log(user);
       const assigneeParams = {
         name: formData.name,
         user_id: user?.id,

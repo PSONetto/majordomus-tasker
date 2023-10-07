@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 import { Button } from 'primereact/button';
+import { Toast } from 'primereact/toast';
 
 import { api } from '../../../../api/api';
 import { useAuth } from '../../../../contexts/auth/AuthContext';
+import handleAPIError from '../../../../utils/functions/handleAPIError';
 import Login from '../../../auth/login/Login';
 import Profile from '../../../auth/profile/Profile';
 import SignUp from '../../../auth/signup/SignUp';
@@ -11,11 +13,17 @@ import SignUp from '../../../auth/signup/SignUp';
 export default function LoginMenu() {
   const { user } = useAuth();
 
+  const toast = useRef<Toast>(null);
+
   const [signUpVisible, setSignUpVisible] = useState(false);
   const [loginVisible, setLoginVisible] = useState(false);
   const [profieVisible, setProfileVisible] = useState(false);
 
+  const [loading, setLoading] = useState(false);
+
   const handleLogout = async () => {
+    setLoading(true);
+
     try {
       const resp = await api.post('logout');
       if (resp.status === 200) {
@@ -23,12 +31,16 @@ export default function LoginMenu() {
         window.location.href = '/';
       }
     } catch (error) {
-      console.log(error);
+      handleAPIError(error, toast);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <>
+      <Toast ref={toast} />
+
       <SignUp visible={signUpVisible} setVisible={setSignUpVisible} />
 
       <Login visible={loginVisible} setVisible={setLoginVisible} />
@@ -48,6 +60,7 @@ export default function LoginMenu() {
                 handleLogout();
               }}
               className="mr-1"
+              loading={loading}
             />
             <Button
               name="profile"
